@@ -29,4 +29,3 @@ num_fun<-function(i){
   colnames(dat_out)<-colnames(data[,1:ncol(data)])
   return(dat_out)
 }
-raw_out<-num_fun(raw)
