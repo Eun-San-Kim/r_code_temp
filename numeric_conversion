@@ -1,0 +1,27 @@
+##
+
+num_fun<-function(i){
+  data<-i
+  dat_out<-data.frame(matrix(nrow=nrow(data),ncol=ncol(data)))
+  for(i in 1:ncol(data)){
+    col_subtract<-data[,i]
+    
+    error_fun<-tryCatch(
+      as.numeric(col_subtract),
+      error=function(e) return("error"),
+      warning=function(e) return("error")
+    )
+    
+    if(error_fun[1]=="error"){
+      col_out<-col_subtract
+    }else{
+      col_out<-sapply(col_subtract,as.numeric)
+    }
+    
+    dat_out[,i]<-col_out
+    
+  }
+  colnames(dat_out)<-colnames(data[,1:ncol(data)])
+  return(dat_out)
+}
+raw_out<-num_fun(raw)
