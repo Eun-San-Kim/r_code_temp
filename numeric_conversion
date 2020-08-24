@@ -1,4 +1,9 @@
-##
+#In the process of perform 'as.numeric' on data, errors often occurred.
+In non-English speaking countries, in particular, the error was often caused by problems of encoding.
+So I created the function that if there is an error in the column,
+it was just flipped over and the next column was converted.#
+
+#the 'i' inputted data#
 
 num_fun<-function(i){
   data<-i
