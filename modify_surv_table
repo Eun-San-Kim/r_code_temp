@@ -1,0 +1,47 @@
+#When drawing the graph of the Survival analysis, the survminer package is used mainly.
+However, unlike ggplot, the survminer is a little less modifiable according to the situation.
+Especially, I found that there was almost no information about modifying risk table.
+So I made the code for it.#
+
+library(survival)
+library(survminer)
+library(dplyr)
+
+#I start with ovarian data in survival pacakge. I create graph object named as 'surv_plot#
+
+data(ovarian)
+
+fit<-survfit(Surv(futime,fustat) ~ rx, data=ovarian)
+
+surv_plot<-ggsurvplot(fit, data=ovarian, fun="event", risk.table=TRUE)
+
+surv_plot
+
+surv_plot$table
+
+#I want delete 300 in time. You have to create another risk table to modify the table.
+As far as I know, extracting table from main graph and applying changes doesn't work.
+You can create table with ggsurvtable function
+When you filter out only time with 0, 600, 900 and 1200, the no. at risk in table will be deleted#
+
+surv_table<-ggsurvtable(surv_plot$table$data%>%filter(time %in% c(0,600,900,1200)))
+
+#You can change the theme of table with theme of main graph#
+
+surv_table$risk.table$theme<-surv_plot$table$theme
+
+#...or it is possible to adapt changes#
+
+surv_table$risk.table$labels$y<-c("Group")
+surv_table$risk.table$labels$title<-c("No. without Recovery")
+
+#You have to apply changes with scale_x_continous to modify x axis. the filter function in 27th row only works for no. at risk#
+
+surv_table$risk.table<-surv_table$risk.table+scale_x_continuous(breaks=c(0,600,900,1200),labels=c(0,600,900,1200))
+surv_table$risk.table
+
+#Finally, you can adapt changes with created table#
+
+surv_plot$table<-surv_table$risk.table
+
+surv_plot
